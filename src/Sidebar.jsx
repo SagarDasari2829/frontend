@@ -21,7 +21,7 @@ function Sidebar() {
 
     useEffect(() => {
         getAllThreads();
-    }, [getAllThreads])
+    }, [currThreadId])
 
 
     const createNewChat = () => {
