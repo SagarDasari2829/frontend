@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 
->>>>>>> 0be4745 (add the backend connection)
 {
   "name": "frontend",
   "private": true,
@@ -33,7 +30,3 @@
     "vite": "^7.0.0"
   }
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 0be4745 (add the backend connection)
