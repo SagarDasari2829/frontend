@@ -1,8 +1,11 @@
-
-name: Node.js CI
+```yaml
+name: React Frontend CI
 
 on:
   push:
+    branches: ["main"]
+
+  pull_request:
     branches: ["main"]
 
 jobs:
@@ -13,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Use Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
@@ -22,7 +25,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build application
-        run: npm run build --if-present
+      - name: Run ESLint
+        run: npm run lint
 
-      # Add a test step here after configuring your tests
+      - name: Build React application
+        run: npm run build
+```
