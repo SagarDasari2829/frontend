@@ -1,4 +1,5 @@
 import "./Sidebar.css";
+import { useCallback } from "react";
 import { useContext, useEffect } from "react";
 import { MyContext } from "./MyContext.jsx";
 import {v1 as uuidv1} from "uuid";
@@ -6,7 +7,7 @@ import {v1 as uuidv1} from "uuid";
 function Sidebar() {
     const {allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats} = useContext(MyContext);
 
-    const getAllThreads = async () => {
+    const getAllThreads = useCallback(async () => {
         try {
             const response = await fetch("http://localhost:8080/api/thread");
             const res = await response.json();
@@ -16,11 +17,11 @@ function Sidebar() {
         } catch(err) {
             console.log(err);
         }
-    };
+    },[]);
 
     useEffect(() => {
         getAllThreads();
-    }, [currThreadId])
+    }, [getAllThreads])
 
 
     const createNewChat = () => {
@@ -76,7 +77,7 @@ function Sidebar() {
                 {
                     allThreads?.map((thread, idx) => (
                         <li key={idx} 
-                            onClick={(e) => changeThread(thread.threadId)}
+                            onClick={() => changeThread(thread.threadId)}
                             className={thread.threadId === currThreadId ? "highlighted": " "}
                         >
                             {thread.title}
