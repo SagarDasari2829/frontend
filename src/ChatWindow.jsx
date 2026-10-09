@@ -9,32 +9,62 @@ function ChatWindow() {
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
-    const getReply = async () => {
-        setLoading(true);
-        setNewChat(false);
+    
+const getReply = async () => {
+    const message = prompt.trim();
 
-        console.log("message ", prompt, " threadId ", currThreadId);
-        const options = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                message: prompt,
-                threadId: currThreadId
-            })
-        };
+    // Prevent empty messages
+    if (!message) {
+        console.log("Please enter a message.");
+        return;
+    }
 
-        try {
-            const response = await fetch("http://ec2-32-236-39-31.ap-southeast-2.compute.amazonaws.com:8080/api/chat", options);
-            const res = await response.json();
-            console.log(res);
-            setReply(res.reply);
-        } catch(err) {
-            console.log(err);
+    if (!currThreadId) {
+        console.error("Thread ID is missing.");
+        return;
+    }
+
+    setLoading(true);
+    setNewChat(false);
+
+    const options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            message: message,
+            threadId: currThreadId
+        })
+    };
+
+    try {
+        const response = await fetch(
+            "http://ec2-32-236-39-31.ap-southeast-2.compute.amazonaws.com:8080/api/chat",
+            options
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("Backend error:", response.status, data);
+            return;
         }
+
+        if (!data.reply) {
+            console.error("Backend did not return a reply:", data);
+            return;
+        }
+
+        setReply(data.reply);
+
+    } catch (error) {
+        console.error("Failed to contact backend:", error);
+    } finally {
         setLoading(false);
     }
+};
+
 
     //Append new chat to prevChats
     useEffect(() => {
